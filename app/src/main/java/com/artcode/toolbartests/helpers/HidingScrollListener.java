@@ -1,7 +1,9 @@
 package com.artcode.toolbartests.helpers;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 /**
  * Created by nigel on 5/11/15.
@@ -18,10 +20,16 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
 
         Log.d("onScrolled", "callback invoked.");
 
+        int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
         if (scrolledDistance > HIDE_THRESHOLD && controlsVisible){
-            onHide();
-            controlsVisible = false;
-            scrolledDistance = 0;
+
+            if (firstVisibleItem != 0 ) {
+                onHide();
+                controlsVisible = false;
+                scrolledDistance = 0;
+            }
+
         }
         else if(scrolledDistance < -HIDE_THRESHOLD && !controlsVisible){
             onShow();
