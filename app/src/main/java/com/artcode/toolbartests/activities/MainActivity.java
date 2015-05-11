@@ -7,26 +7,29 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.artcode.toolbartests.R;
 import com.artcode.toolbartests.adapters.MyAdapter;
+import com.artcode.toolbartests.helpers.HidingScrollListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
 
 public class MainActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private Button button;
+    private ImageButton button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        button = (ImageButton) findViewById(R.id.my_button);
         initToolBar();
         initRecyclerView();
     }
@@ -41,6 +44,17 @@ public class MainActivity extends ActionBarActivity {
         recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new MyAdapter(this, populateItems()));
+        recyclerView.addOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+                hideViews();
+            }
+
+            @Override
+            public void onShow() {
+                showViews();
+            }
+        });
     }
 
     private List<String> populateItems(){
@@ -51,6 +65,29 @@ public class MainActivity extends ActionBarActivity {
         }
         return myList;
     }
+
+    private void hideViews(){
+        toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(
+            new AccelerateInterpolator(2));
+
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) button.getLayoutParams();
+        int buttonBottomMargin = lp.bottomMargin;
+
+
+
+        button.animate().translationY(button.getHeight() + buttonBottomMargin).setInterpolator(
+            new AccelerateInterpolator(2)).start();
+    }
+
+    private void showViews(){
+        toolbar.animate().translationY(0).setInterpolator(
+            new DecelerateInterpolator(2));
+        button.animate().translationY(0).setInterpolator(
+            new DecelerateInterpolator(2)).start();
+
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
