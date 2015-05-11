@@ -12,6 +12,7 @@ import android.widget.Button;
 import com.artcode.toolbartests.R;
 import com.artcode.toolbartests.adapters.MyAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initToolBar();
+        initRecyclerView();
     }
 
     private void initToolBar(){
@@ -35,19 +37,19 @@ public class MainActivity extends ActionBarActivity {
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
     }
 
-    private void initRecyclerVeiw(){
+    private void initRecyclerView(){
         recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MyAdapter(this,populateItems()));
+        recyclerView.setAdapter(new MyAdapter(this, populateItems()));
     }
 
     private List<String> populateItems(){
 
-        List<String> myList = Collections.emptyList();
+        List<String> myList = new ArrayList<>();
         for (int i = 1; i <= 100; i++){
             myList.add("Item" + i);
         }
-        return null;
+        return myList;
     }
 
     @Override
