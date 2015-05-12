@@ -24,7 +24,7 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
 
         if (scrolledDistance > HIDE_THRESHOLD && controlsVisible){
 
-            if (firstVisibleItem != 0 ) {
+            if (firstVisibleItem > 5 ) {
                 onHide();
                 controlsVisible = false;
                 scrolledDistance = 0;
