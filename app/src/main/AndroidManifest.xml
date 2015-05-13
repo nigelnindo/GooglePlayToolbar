@@ -10,9 +10,13 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" >
+
+        </activity>
+        <activity
+            android:name=".activities.FlexSpaceImageScrollView"
+            android:label="@string/title_activity_flex_space_image_scroll_view" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
