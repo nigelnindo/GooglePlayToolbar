@@ -2,6 +2,7 @@ package com.artcode.toolbartests.activities;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,12 +91,17 @@ public class FlexSpaceImageScrollView extends ActionBarActivity implements Obser
         ViewHelper.setScaleX(mFab,0);
         ViewHelper.setScaleY(mFab, 0);
 
+
+
         ScrollUtils.addOnGlobalLayoutListener(mScrollView, new Runnable() {
             @Override
             public void run() {
                 mScrollView.scrollTo(0,mFlexibleSpaceImageHeight - mActionBarSize);
+                //the following line makes it more intuitive to the user
+                mScrollView.scrollTo(0,0);
             }
         });
+
 
     }
 
@@ -127,6 +134,9 @@ public class FlexSpaceImageScrollView extends ActionBarActivity implements Obser
         Log.d("First scroll?", ""+firstScroll);
         Log.d("Dragging?",""+dragging);
 
+        Log.d("mActionBarSize",""+mActionBarSize);
+        Log.d("mOverLayView height",""+mOverlayView.getHeight());
+
         //Translate overlay and image
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
@@ -151,6 +161,49 @@ public class FlexSpaceImageScrollView extends ActionBarActivity implements Obser
         }
         ViewHelper.setTranslationY(mTitleView,titleTranslationY);
 
+        //translate FAB
+        int maxFabTranslationY = mFlexibleSpaceImageHeight - mFab.getHeight()/2;
+        float fabTranslationY = ScrollUtils.getFloat(
+            -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight()/2,
+            mActionBarSize - mFab.getHeight()/2,
+            maxFabTranslationY);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
+            lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
+            lp.topMargin = (int) fabTranslationY;
+            mFab.requestLayout();
+        }
+        else{
+            ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
+            ViewHelper.setTranslationY(mFab, fabTranslationY);
+        }
+
+        if (fabTranslationY < mFlexibleSpaceShowFabOffset){
+            hideFab();
+        }
+        else{
+            showFab();
+        }
+
+        if (TOOLBAR_IS_STICKY){
+            //change alpha of toolbar background
+            if (-scrollY + mFlexibleSpaceImageHeight <= mActionBarSize){
+                mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(1,mToolbarColor));
+            }
+            else{
+                mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0,mToolbarColor));
+            }
+        }
+        else{
+            //translate toolbar
+            if (scrollY < mFlexibleSpaceImageHeight){
+                ViewHelper.setTranslationY(mToolbar,0);
+            }
+            else{
+                ViewHelper.setTranslationY(mToolbar, -scrollY);
+            }
+
+        }
 
     }
 

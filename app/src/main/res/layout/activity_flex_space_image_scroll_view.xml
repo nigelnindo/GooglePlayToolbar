@@ -42,7 +42,6 @@
                 android:background="@android:color/white"
                 android:padding="@dimen/activity_horizontal_margin"
                 android:text="@string/lipsum"/>
-
         </LinearLayout>
 
     </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
