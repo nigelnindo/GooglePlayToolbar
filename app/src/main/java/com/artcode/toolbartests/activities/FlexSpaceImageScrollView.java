@@ -91,8 +91,6 @@ public class FlexSpaceImageScrollView extends ActionBarActivity implements Obser
         ViewHelper.setScaleX(mFab,0);
         ViewHelper.setScaleY(mFab, 0);
 
-
-
         ScrollUtils.addOnGlobalLayoutListener(mScrollView, new Runnable() {
             @Override
             public void run() {
